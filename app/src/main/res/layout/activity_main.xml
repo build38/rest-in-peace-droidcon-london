@@ -19,6 +19,7 @@
             android:id="@+id/radio_without_cert_pinning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="Without Certificate Pinning" />
 
         <!-- Option 2 RadioButton -->
@@ -54,6 +55,8 @@
         android:layout_below="@id/button_run_call"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:text=""
         android:textSize="20sp" />
 </RelativeLayout>
