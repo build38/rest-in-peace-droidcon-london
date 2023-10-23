@@ -18,10 +18,10 @@ internal class Presenter {
 
     fun onUserClickedRunNetworkCall(apiSecretsMode: ApiSecretsMode) {
 
-        // TODO: get BASE_URL from constants or Build Config
+        val secretToken = retrieveToken(apiSecretsMode)
         val request = Request.Builder()
-            .url("https://httpbin.org/bearer")
-            .addHeader("Authorization", "Bearer secretToken:{droidConLondon}")
+            .url("${BASE_URL}/bearer")
+            .addHeader("Authorization", "Bearer $secretToken")
             .build()
 
         okHttpClient.newCall(request).enqueue(handleResponse(apiSecretsMode))
@@ -43,5 +43,18 @@ internal class Presenter {
                 view!!.showSuccessfulNetworkCallWith(apiSecretsMode, responseBodyString)
             }
         }
+    }
+
+    private fun retrieveToken(apiSecretsMode: ApiSecretsMode): String {
+        return when (apiSecretsMode) {
+            ApiSecretsMode.NO_API_SECRETS -> "{SecretToken_dr0idConL0Ndon}"
+            ApiSecretsMode.HARDCODED_API_SECRETS -> HardcodedSecretsProvider().retrieveApiSecrets()
+            ApiSecretsMode.PROTECTED_API_SECRETS -> ProtectedSecretsProvider().retrieveApiSecrets()
+        }
+
+    }
+
+    companion object {
+        private const val BASE_URL = "https://httpbin.org"
     }
 }
