@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity(), ViewInterface {
 
     override fun showSuccessfulNetworkCallWith(secretsMode: ApiSecretsMode, body: String) {
         runOnUiThread {
-            textViewOnUi.text = "Secret mode: $secretsMode and body is: \n $body"
+            textViewOnUi.text = "Secret mode: $secretsMode and body is: \n\n $body"
         }
     }
 
