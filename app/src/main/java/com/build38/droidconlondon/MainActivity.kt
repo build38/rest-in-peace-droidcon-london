@@ -13,19 +13,19 @@ class MainActivity : AppCompatActivity(), ViewInterface {
 
     private var mode = ApiSecretsMode.WITHOUT_CERTIFICATE_PINNING
 
-    private lateinit var textViewOnUi: TextView
-    private lateinit var buttonRunCallOnUi: Button
-    private lateinit var radioGroupOnUi: RadioGroup
+    private lateinit var bodyResponseTextView: TextView
+    private lateinit var runNetworkCallButton: Button
+    private lateinit var networkSecretsModeRadioGroup: RadioGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        textViewOnUi = findViewById<TextView>(R.id.center_text)
-        buttonRunCallOnUi = findViewById<Button>(R.id.button_run_call)
-        radioGroupOnUi = findViewById(R.id.radioGroup)
+        bodyResponseTextView = findViewById<TextView>(R.id.center_text)
+        runNetworkCallButton = findViewById<Button>(R.id.button_run_call)
+        networkSecretsModeRadioGroup = findViewById(R.id.radioGroup)
 
-        radioGroupOnUi.setOnCheckedChangeListener { group, checkedId ->
+        networkSecretsModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             // Handle the radio button selection here
             when (checkedId) {
                 R.id.radio_without_cert_pinning -> {
@@ -40,16 +40,16 @@ class MainActivity : AppCompatActivity(), ViewInterface {
             }
         }
 
-        presenter.onViewAttached(this)
-
-        buttonRunCallOnUi.setOnClickListener {
+        runNetworkCallButton.setOnClickListener {
             presenter.onUserClickedRunNetworkCall(mode)
         }
+
+        presenter.onViewAttached(this)
     }
 
     override fun showSuccessfulNetworkCallWith(secretsMode: ApiSecretsMode, body: String) {
         runOnUiThread {
-            textViewOnUi.text = "Secret mode: $secretsMode and body is: \n\n $body"
+            bodyResponseTextView.text = "Secret mode: $secretsMode and body is: \n\n $body"
         }
     }
 
