@@ -17,9 +17,11 @@ internal class Presenter {
     }
 
     fun onUserClickedRunNetworkCall(apiSecretsMode: ApiSecretsMode) {
-        // TODO: get url from constants or Build Config
+
+        // TODO: get BASE_URL from constants or Build Config
         val request = Request.Builder()
-            .url("https://httpbin.org/get")
+            .url("https://httpbin.org/bearer")
+            .addHeader("Authorization", "Bearer secretToken:{droidConLondon}")
             .build()
 
         okHttpClient.newCall(request).enqueue(handleResponse(apiSecretsMode))
