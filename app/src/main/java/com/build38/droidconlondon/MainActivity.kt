@@ -2,47 +2,41 @@ package com.build38.droidconlondon
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
-import okhttp3.*
-import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ViewInterface {
 
-    val okHttpClient = OkHttpClient()
+    private var presenter = Presenter()
+    private lateinit var textViewOnUi: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        runNetworkCall()
+        textViewOnUi = findViewById<TextView>(R.id.center_text)
+
+        presenter.onViewAttached(this)
+
+        presenter.onUserClickedRunNetworkCall(ApiSecretsMode.NO_API_SECRETS)
     }
 
-    private fun runNetworkCall() {
-        val request = Request.Builder()
-            .url("https://httpbin.org/get")
-            .build()
+    override fun showSuccessfulNetworkCallWith(secretsMode: ApiSecretsMode, body: String) {
+        runOnUiThread {
+            textViewOnUi.text = "Secret mode: $secretsMode and body is: \n $body"
+        }
+    }
 
-        val textView: TextView = findViewById(R.id.center_text)
+    override fun showFailedNetworkCallWith(secretsMode: ApiSecretsMode, error: String) {
+        Log.d(LOG_TAG, "Network call failed on $secretsMode mode with the error: $error")
+    }
 
-        okHttpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
+    override fun onDestroy() {
+        presenter.onViewDetached()
+        super.onDestroy()
+    }
 
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
-
-                    for ((name, value) in response.headers) {
-                        println("$name: $value")
-                    }
-
-                    val responseBodyString = response.body?.string() ?: "Response body is null"
-
-                    runOnUiThread {
-                        textView.text = responseBodyString
-                    }
-                }
-            }
-        })
+    companion object {
+        const val LOG_TAG = "DroidCon London App"
     }
 }
