@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity(), ViewInterface {
 
     private var presenter = Presenter()
 
-    private var mode = ApiSecretsMode.NO_API_SECRETS
+    private var mode = ApiSecretsMode.WITHOUT_CERTIFICATE_PINNING
 
     private lateinit var textViewOnUi: TextView
     private lateinit var buttonRunCallOnUi: Button
@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), ViewInterface {
             // Handle the radio button selection here
             when (checkedId) {
                 R.id.radio_without_cert_pinning -> {
-                    mode = ApiSecretsMode.NO_API_SECRETS
+                    mode = ApiSecretsMode.WITHOUT_CERTIFICATE_PINNING
                 }
                 R.id.radio_hardocded_token -> {
                     mode = ApiSecretsMode.HARDCODED_API_SECRETS

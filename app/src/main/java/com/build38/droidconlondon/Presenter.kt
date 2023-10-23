@@ -19,9 +19,10 @@ internal class Presenter {
     fun onUserClickedRunNetworkCall(apiSecretsMode: ApiSecretsMode) {
 
         val secretToken = retrieveToken(apiSecretsMode)
+
         val request = Request.Builder()
-            .url("${BASE_URL}/bearer")
-            .addHeader("Authorization", "Bearer $secretToken")
+            .url("${secretToken.first}/bearer")
+            .addHeader("Authorization", "Bearer ${secretToken.second}")
             .build()
 
         okHttpClient.newCall(request).enqueue(handleResponse(apiSecretsMode))
@@ -45,16 +46,17 @@ internal class Presenter {
         }
     }
 
-    private fun retrieveToken(apiSecretsMode: ApiSecretsMode): String {
+    private fun retrieveToken(apiSecretsMode: ApiSecretsMode): Pair<String, String> {
         return when (apiSecretsMode) {
-            ApiSecretsMode.NO_API_SECRETS -> "{SecretToken_dr0idConL0Ndon}"
-            ApiSecretsMode.HARDCODED_API_SECRETS -> HardcodedSecretsProvider().retrieveApiSecrets()
-            ApiSecretsMode.PROTECTED_API_SECRETS -> ProtectedSecretsProvider().retrieveApiSecrets()
+            ApiSecretsMode.WITHOUT_CERTIFICATE_PINNING -> Pair(BASE_URL_NO_CERTIFICATE_PINNING, "{SecretToken_dr0idConL0Ndon}")
+            ApiSecretsMode.HARDCODED_API_SECRETS -> Pair(BASE_URL_WITH_CERTIFICATE_PINNING, HardcodedSecretsProvider().retrieveApiSecrets())
+            ApiSecretsMode.PROTECTED_API_SECRETS -> Pair(BASE_URL_WITH_CERTIFICATE_PINNING, ProtectedSecretsProvider().retrieveApiSecrets())
         }
 
     }
 
     companion object {
-        private const val BASE_URL = "https://httpbin.org"
+        private const val BASE_URL_NO_CERTIFICATE_PINNING = "https://httpbin.org"
+        private const val BASE_URL_WITH_CERTIFICATE_PINNING = "https://httpbin.org" // TODO: is httpbin.dev.build38.cloud down?
     }
 }
