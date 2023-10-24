@@ -17,12 +17,12 @@ internal class Presenter {
     }
 
     fun onUserClickedRunNetworkCall(apiSecretsMode: ApiSecretsMode) {
-
-        val secretToken = retrieveToken(apiSecretsMode)
+        val baseUrl = getBaseUrl(apiSecretsMode)
+        val apiToken = getApiSecretsProvider(apiSecretsMode).retrieveApiSecrets(baseUrl)
 
         val request = Request.Builder()
-            .url("${secretToken.first}/bearer")
-            .addHeader("Authorization", "Bearer ${secretToken.second}")
+            .url("${baseUrl}/get")
+            .addHeader("Authorization", "Bearer $apiToken")
             .build()
 
         okHttpClient.newCall(request).enqueue(handleResponse(apiSecretsMode))
@@ -46,17 +46,22 @@ internal class Presenter {
         }
     }
 
-    private fun retrieveToken(apiSecretsMode: ApiSecretsMode): Pair<String, String> {
+    private fun getBaseUrl(apiSecretsMode: ApiSecretsMode): String {
         return when (apiSecretsMode) {
-            ApiSecretsMode.WITHOUT_CERTIFICATE_PINNING -> Pair(BASE_URL_NO_CERTIFICATE_PINNING, "{SecretToken_dr0idConL0Ndon}")
-            ApiSecretsMode.HARDCODED_API_SECRETS -> Pair(BASE_URL_WITH_CERTIFICATE_PINNING, HardcodedSecretsProvider().retrieveApiSecrets())
-            ApiSecretsMode.PROTECTED_API_SECRETS -> Pair(BASE_URL_WITH_CERTIFICATE_PINNING, ProtectedSecretsProvider().retrieveApiSecrets())
+            ApiSecretsMode.WITHOUT_CERTIFICATE_PINNING -> BASE_URL_NO_CERTIFICATE_PINNING
+            else -> BASE_URL_WITH_CERTIFICATE_PINNING
         }
+    }
 
+    private fun getApiSecretsProvider(apiSecretsMode: ApiSecretsMode): ApiSecretsProvider {
+        return when (apiSecretsMode) {
+            ApiSecretsMode.PROTECTED_API_SECRETS -> EncryptedSecretsProvider()
+            else -> HardcodedSecretsProvider()
+        }
     }
 
     companion object {
-        private const val BASE_URL_NO_CERTIFICATE_PINNING = "https://httpbin.org"
-        private const val BASE_URL_WITH_CERTIFICATE_PINNING = "https://httpbin.org" // TODO: is httpbin.dev.build38.cloud down?
+        private const val BASE_URL_NO_CERTIFICATE_PINNING = "https://httpbin.dmuth.org"
+        private const val BASE_URL_WITH_CERTIFICATE_PINNING = "https://httpbin.org"
     }
 }

@@ -9,7 +9,7 @@ import javax.crypto.spec.SecretKeySpec
 
 private const val TAG_LENGTH = 16
 
-internal class ProtectedSecretsProvider: ApiSecretsProviderInterface {
+internal class EncryptedSecretsProvider: ApiSecretsProvider {
 
     /*
      * Secrets needed for token decryption.
@@ -28,9 +28,15 @@ internal class ProtectedSecretsProvider: ApiSecretsProviderInterface {
     private val tag = byteArrayOf(0x85.toByte(), 0xb8.toByte(), 0x75, 0x61, 0x2b, 0xc8.toByte(), 0x37, 0x9e.toByte(), 0x87.toByte(), 0x42, 0x31, 0x06, 0x2e, 0xa8.toByte(), 0x40, 0x9a.toByte())
     private val ciphertext = byteArrayOf(0xa1.toByte(), 0xd1.toByte(), 0x75, 0x8b.toByte(), 0xad.toByte(), 0x89.toByte(), 0xb1.toByte(), 0xe1.toByte(), 0x98.toByte(), 0xbe.toByte(), 0xf2.toByte(), 0xcd.toByte(), 0x83.toByte(), 0x5a, 0xe2.toByte(), 0xee.toByte(), 0x99.toByte(), 0x46, 0x52, 0xa0.toByte(), 0x97.toByte(), 0x06, 0x99.toByte(), 0x0b, 0x25, 0x74, 0x82.toByte(), 0x98.toByte(), 0x76)
 
-    override fun retrieveApiSecrets(): String {
-        // generateEncryptedToken("EncryptedToken_dr0idConL0Ndon")
-        return decryptSecretToken()
+    override fun retrieveApiSecrets(baseUrl: String): String {
+        return if (baseUrl.endsWith("httpbin.org")) {
+            // Un-comment the following line if you need to re-generate ciphertext/tag
+            // generateEncryptedToken("EncryptedToken_dr0idConL0Ndon")
+            decryptSecretToken()
+        } else {
+            throw UnsupportedOperationException("Unknown Base URL $baseUrl")
+        }
+
     }
 
     private fun decryptSecretToken(): String {
