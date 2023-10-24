@@ -9,9 +9,7 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity(), ViewInterface {
 
-    private var presenter = Presenter()
-
-    private var mode = ApiSecretsMode.WITHOUT_CERTIFICATE_PINNING
+    private val presenter = Presenter()
 
     private lateinit var bodyResponseTextView: TextView
     private lateinit var runNetworkCallButton: Button
@@ -21,26 +19,17 @@ class MainActivity : AppCompatActivity(), ViewInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bodyResponseTextView = findViewById<TextView>(R.id.center_text)
-        runNetworkCallButton = findViewById<Button>(R.id.button_run_call)
+        bodyResponseTextView = findViewById(R.id.center_text)
+        runNetworkCallButton = findViewById(R.id.button_run_call)
         networkSecretsModeRadioGroup = findViewById(R.id.radioGroup)
 
-        networkSecretsModeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-            // Handle the radio button selection here
-            when (checkedId) {
-                R.id.radio_without_cert_pinning -> {
-                    mode = ApiSecretsMode.WITHOUT_CERTIFICATE_PINNING
-                }
-                R.id.radio_hardocded_token -> {
-                    mode = ApiSecretsMode.HARDCODED_API_SECRETS
-                }
-                R.id.radio_protected_token -> {
-                    mode = ApiSecretsMode.PROTECTED_API_SECRETS
-                }
-            }
-        }
-
         runNetworkCallButton.setOnClickListener {
+            val mode = when (networkSecretsModeRadioGroup.checkedRadioButtonId) {
+                R.id.radio_without_cert_pinning -> ApiSecretsMode.WITHOUT_CERTIFICATE_PINNING
+                R.id.radio_hardocded_token -> ApiSecretsMode.HARDCODED_API_SECRETS
+                R.id.radio_protected_token -> ApiSecretsMode.PROTECTED_API_SECRETS
+                else -> ApiSecretsMode.WITHOUT_CERTIFICATE_PINNING
+            }
             presenter.onUserClickedRunNetworkCall(mode)
         }
 
@@ -49,7 +38,7 @@ class MainActivity : AppCompatActivity(), ViewInterface {
 
     override fun showSuccessfulNetworkCallWith(secretsMode: ApiSecretsMode, body: String) {
         runOnUiThread {
-            bodyResponseTextView.text = "Secret mode: $secretsMode and body is: \n\n $body"
+            bodyResponseTextView.text = "Operation Mode: $secretsMode\n\nBody:\n\n$body"
         }
     }
 
