@@ -5,7 +5,7 @@ import java.io.IOException
 
 internal class Presenter {
 
-    val okHttpClient = OkHttpClient()
+    private val okHttpClient = OkHttpClient()
     private var view: ViewInterface? = null
 
     fun onViewAttached(view: ViewInterface) {
