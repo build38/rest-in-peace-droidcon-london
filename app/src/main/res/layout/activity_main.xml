@@ -27,14 +27,14 @@
             android:id="@+id/radio_hardocded_token"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hardcoded Token" />
+            android:text="With Certificate Pinning" />
 
         <!-- Option 3 RadioButton -->
         <RadioButton
             android:id="@+id/radio_protected_token"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Protected Token" />
+            android:text="With Encrypted Token" />
     </RadioGroup>
 
     <!-- Button to Select and Display Option -->
