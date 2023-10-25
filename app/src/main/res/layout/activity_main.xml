@@ -59,4 +59,12 @@
         android:layout_marginRight="16dp"
         android:text=""
         android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/banner_build38" />
 </RelativeLayout>
