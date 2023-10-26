@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config>
+        <domain includeSubdomains="true">httpbin.org</domain>
+        <pin-set expiration="2024-10-24">
+            <!-- use openssl to extract certificate digest: openssl s_client -servername httpbin.org -connect httpbin.org:443 | openssl x509 -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | openssl enc -base64 -->
+            <pin digest="SHA-256">xuycWePFSVzZILxPmRYEM5D3KEnTExjc5n4BjsYBX0I=</pin>
+            <!-- backup pin not available :-/ -->
+        </pin-set>
+    </domain-config>
+</network-security-config>

@@ -27,14 +27,14 @@
             android:id="@+id/radio_hardocded_token"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hardcoded Token" />
+            android:text="With Certificate Pinning" />
 
         <!-- Option 3 RadioButton -->
         <RadioButton
             android:id="@+id/radio_protected_token"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Protected Token" />
+            android:text="With Encrypted Token" />
     </RadioGroup>
 
     <!-- Button to Select and Display Option -->
@@ -59,4 +59,12 @@
         android:layout_marginRight="16dp"
         android:text=""
         android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/banner_build38" />
 </RelativeLayout>
